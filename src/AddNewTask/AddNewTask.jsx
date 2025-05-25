@@ -1,26 +1,9 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import Navbar from "../Home/Navbar";
 
 export default function AddNewTask() {
   return (
     <div class='text-[#111827]'>
-      <nav class='container relative py-3'>
-        <div class='flex items-center justify-between'>
-          <Link to='/'>
-            <img src='/logo.svg' />
-          </Link>
-
-          <div class='flex-1 max-w-xs search-field group'>
-            <i class='fa-solid fa-magnifying-glass search-icon group-focus-within:text-blue-500'></i>
-            <input
-              type='text'
-              placeholder='Search Job'
-              class='search-input'
-              id='lws-searchJob'
-            />
-          </div>
-        </div>
-      </nav>
+      <Navbar />
       <div class='container relative'>
         <main class='relative z-20 max-w-3xl mx-auto rounded-lg xl:max-w-none'>
           <h1 class='mt-4 mb-8 text-3xl font-bold text-center text-gray-800'>
