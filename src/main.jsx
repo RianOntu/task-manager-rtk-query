@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AddNewTask from "./AddNewTask/AddNewTask.jsx";
 import { Provider } from "react-redux";
 import { store } from "./Store/Store.js";
+import EditTask from "./EditTask/EditTask.jsx";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
   {
     path: "/add-new-task",
     element: <AddNewTask />,
+  },
+  {
+    path: "/edit/:id",
+    element: <EditTask />,
   },
 ]);
 

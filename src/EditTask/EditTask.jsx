@@ -1,24 +1,44 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetProjectsQuery } from "../Features/Projects/ProjectsApi";
-import { useAddTaskMutation } from "../Features/Tasks/TasksApi";
+import {
+  useGetTasksQuery,
+  useUpdateTaskMutation,
+} from "../Features/Tasks/TasksApi";
 import { useGetTeamQuery } from "../Features/Team/TeamApi";
 import Navbar from "../Home/Navbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function AddNewTask() {
+export default function EditTask() {
+  const [taskToEdit, setTaskToEdit] = useState({});
   const { data: teams } = useGetTeamQuery();
   const { data: projects } = useGetProjectsQuery();
-  const [addTask] = useAddTaskMutation();
+  const { data: tasks } = useGetTasksQuery();
+  const [updateTask] = useUpdateTaskMutation();
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (tasks && id) {
+      const task = tasks.find((task) => task.id == id);
+      setTaskToEdit(task);
+
+      // Optional: also update form data when task is fetched
+      setFormData({
+        taskName: task?.taskName || "",
+        teamMember: task?.teamMember || null,
+        project: task?.project || null,
+        deadline: task?.deadline || "",
+      });
+    }
+  }, [tasks, id]);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    taskName: "",
-    teamMember: "",
-    project: null, 
-    deadline: "",
+    taskName: taskToEdit?.taskName,
+    teamMember: taskToEdit?.teamMember,
+    project: taskToEdit?.project,
+    deadline: taskToEdit?.deadline,
   });
 
- 
   const handleProjectChange = (e) => {
     const selectedProjectName = e.target.value;
     const selectedProject = projects.find(
@@ -45,12 +65,12 @@ export default function AddNewTask() {
 
     const taskData = {
       taskName: formData.taskName,
-      teamMember: formData.teamMember, // entire object
-      project: formData.project, // entire object
+      teamMember: formData.teamMember, 
+      project: formData.project, 
       deadline: formData.deadline,
     };
 
-    addTask(taskData)
+    updateTask({ id: id, data: taskData })
       .unwrap()
       .then(() => {
         setFormData({
@@ -62,7 +82,7 @@ export default function AddNewTask() {
         navigate("/");
       })
       .catch((error) => {
-        console.error("Failed to add task:", error);
+        console.error("Failed to update task:", error);
       });
   };
 
@@ -146,7 +166,7 @@ export default function AddNewTask() {
 
               <div className='text-right'>
                 <button type='submit' className='lws-submit'>
-                  Save
+                  Update
                 </button>
               </div>
             </form>
